@@ -82,10 +82,7 @@ class CreatorIDFileResource(resource.Resource):
 			return self.GenerateDetailsPage(creator, ".".join(file.split(".")[:-1])).encode("UTF-8")
 		elif filetype == "star":
 			path = "/".join(request.path.split("/")[3:])
-			try:
-				color = request.args.get('starcolor')[0] #colour of the star. can be green, red, blue, or purple.
-			except:
-				color = "yellow" #if starcolor arg doesn't exist, then its yellow. there's probably a better way to handle this, but I'm not fluent with python ;-;
+			color = request.args.get('starcolor', ["yellow"])[0] # colour of star, can be green, red, blue, or purple. Yellow otherwise.
 			headers = request.getAllHeaders()
 
 			#bad formatting

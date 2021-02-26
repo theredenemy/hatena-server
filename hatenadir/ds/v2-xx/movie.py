@@ -82,8 +82,12 @@ class CreatorIDFileResource(resource.Resource):
 			return self.GenerateDetailsPage(creator, ".".join(file.split(".")[:-1])).encode("UTF-8")
 		elif filetype == "star":
 			path = "/".join(request.path.split("/")[3:])
+			try:
+				color = request.args.get('starcolor')[0] #colour of the star. can be green, red, blue, or purple.
+			except:
+				color = "yellow" #if starcolor arg doesn't exist, then its yellow. there's probably a better way to handle this, but I'm not fluent with python ;-;
 			headers = request.getAllHeaders()
-			
+
 			#bad formatting
 			if "x-hatena-star-count" not in headers:
 				ServerLog.write("%s got 403 when requesting %s without a X-Hatena-Star-Count header" % (request.getClientIP(), path), Silent)
@@ -97,14 +101,14 @@ class CreatorIDFileResource(resource.Resource):
 				request.setResponseCode(403)
 				return "403 - Denied access\nRequest has an invalid X-Hatena-Star-Count http header"
 			
-			if not Database.AddStar(creator, file[:-5], amount):
+			if not Database.AddStar(creator, file[:-5], amount, color):
 				#error
 				ServerLog.write("%s got 500 when requesting %s" % (request.getClientIP(), path), Silent)
 				request.setResponseCode(500)
 				return "500 - Internal server error\nAdding the stars seem to have failed."
 			
 			#report success
-			ServerLog.write("%s added %i stars to %s/%s.ppm" % (request.getClientIP(), amount, creator, file[:-5]), Silent)
+			ServerLog.write("%s added %i %s stars to %s/%s.ppm" % (request.getClientIP(), amount, color, creator, file[:-5]), Silent)
 			return "Success"
 		elif filetype == "dl":
 			path = "/".join(request.path.split("/")[3:])
@@ -149,7 +153,10 @@ class CreatorIDFileResource(resource.Resource):
 		#Stars:
 		name = "Stars"
 		content = u'<a href="http://flipnote.hatena.com/ds/v2-xx/movie/%s/%s.htm?mode=stardetail"><span class="star0c">\u2605</span> <span class="star0">%s</span></a>' % (CreatorID, filename, flipnote[2])#yellow stars
-		#todo: add other stars
+		content += u'<br/><a href="http://flipnote.hatena.com/ds/v2-xx/movie/%s/%s.htm?mode=stardetail"><span class="star1c">\u2605</span> <span class="star1">%s</span></a>' % (CreatorID, filename, flipnote[3])#green stars
+		content += u'<br/><a href="http://flipnote.hatena.com/ds/v2-xx/movie/%s/%s.htm?mode=stardetail"><span class="star2c">\u2605</span> <span class="star2">%s</span></a>' % (CreatorID, filename, flipnote[4])#red stars
+		content += u'<br/><a href="http://flipnote.hatena.com/ds/v2-xx/movie/%s/%s.htm?mode=stardetail"><span class="star3c">\u2605</span> <span class="star3">%s</span></a>' % (CreatorID, filename, flipnote[5])#blue stars
+		content += u'<br/><a href="http://flipnote.hatena.com/ds/v2-xx/movie/%s/%s.htm?mode=stardetail"><span class="star4c">\u2605</span> <span class="star4">%s</span></a>' % (CreatorID, filename, flipnote[6])#purple stars
 		Entries.append(PageEntryTemplate.replace("%%Name%%", name).replace("%%Content%%", content))
 		
 		#Views:
@@ -182,6 +189,10 @@ DetailsPageTemplate = """<html>
 		<title>Flipnote by %%Username%%</title>
 		<meta name="upperlink" content="http://flipnote.hatena.com/ds/v2-xx/movie/%%CreatorID%%/%%Filename%%.ppm">
 		<meta name="starbutton" content="http://flipnote.hatena.com/ds/v2-xx/movie/%%CreatorID%%/%%Filename%%.star">
+    		<meta name="starbutton1" content="http://flipnote.hatena.com/ds/v2-xx/movie/%%CreatorID%%/%%Filename%%.star?starcolor=green,9001">
+    		<meta name="starbutton2" content="http://flipnote.hatena.com/ds/v2-xx/movie/%%CreatorID%%/%%Filename%%.star?starcolor=red,9001">
+    		<meta name="starbutton3" content="http://flipnote.hatena.com/ds/v2-xx/movie/%%CreatorID%%/%%Filename%%.star?starcolor=blue,9001">
+    		<meta name="starbutton4" content="http://flipnote.hatena.com/ds/v2-xx/movie/%%CreatorID%%/%%Filename%%.star?starcolor=purple,9001">
 		<meta name="savebutton" content="http://flipnote.hatena.com/ds/v2-xx/movie/%%CreatorID%%/%%Filename%%.ppm">
 		<meta name="playcontrolbutton" content="">
 		<link rel="stylesheet" href="http://flipnote.hatena.com/css/ds/basic.css">

@@ -132,10 +132,18 @@ class Database:
 				self.Views += 1
 				return True
 		return False
-	def AddStar(self, CreatorID, filename, amount=1):#todo: add support for other colored stars
+	def AddStar(self, CreatorID, filename, amount=1, color='yellow'):
+		print color
+		starindices = {
+			'yellow': 2,
+			'green': 3,
+			'red': 4,
+			'blue': 5,
+			'purple': 6
+		}
 		for i, flipnote in enumerate(self.GetCreator(CreatorID, True) or []):
 			if flipnote[0] == filename:
-				self.Creator[CreatorID][i][2] = int(flipnote[2]) + amount
+				self.Creator[CreatorID][i][starindices[color]] = int(flipnote[starindices[color]]) + amount
 				self.Stars += 1
 				return True
 		return False

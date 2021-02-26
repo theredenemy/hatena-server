@@ -133,7 +133,6 @@ class Database:
 				return True
 		return False
 	def AddStar(self, CreatorID, filename, amount=1, color='yellow'):
-		print color
 		starindices = {
 			'yellow': 2,
 			'green': 3,

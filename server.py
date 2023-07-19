@@ -3,13 +3,13 @@ useWSGI = False#not fully tested and WILL NOT support multible instances/workers
 port = 8080
 
 #import:
-print "Importing modules...",
+print("Importing modules...")
 from twisted.web import server#filehost
 from twisted.internet import reactor
 if useWSGI: from twisted.application import internet, service
 
 import sys, time, os, atexit
-print "Done!"
+print("Done!")
 
 #set working directory
 if os.path.dirname(__file__):
@@ -23,7 +23,7 @@ else:
 		os.chdir(path)
 		break
 	else:
-		print "Can't force working directory, may fail crash!"
+		print("Can't force working directory, may fail crash!")
 
 #Logging
 class Log:
@@ -98,7 +98,7 @@ class Log:
 Log = Log()
 
 #init database:
-print "Initializing flipnote database...",
+print("Initializing flipnote database...",)
 import DB
 print "Done!"
 

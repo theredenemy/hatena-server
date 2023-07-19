@@ -18,7 +18,7 @@ from base64 import b64encode, b64decode
 import xml.etree.ElementTree as ET
 
 try:
-	import PPM
+	import Hatenatools.TMB
 	HasPPM = True
 except ImportError:
 	HasPPM = False
@@ -166,7 +166,7 @@ class UGO:
 						pos += 0x6A0
 						
 						if HasPPM:
-							tmb = PPM.TMB().Read(file)
+							tmb = Hatenatools.TMB.TMB().Read(file)
 							name = tmb.CurrentFilename[:-4]
 							del tmb
 						else:

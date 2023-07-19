@@ -10,7 +10,7 @@
 #
 import sys, os, numpy as np
 try:
-	import Image
+	from PIL import Image
 	hasPIL = True
 except ImportError:
 	hasPIL = False
@@ -26,7 +26,7 @@ def AscDec(ascii, LittleEndian=False):#Converts a ascii string into a decimal
 	return ret
 def DecAsc(dec, length=None, LittleEndian=False):#Converts a decimal into an ascii string of chosen length
 	out = []
-	while dec <> 0:
+	while dec != 0:
 		out.insert(0, dec&0xFF)
 		dec >>= 8
 	#"".join(map(chr, out))
@@ -71,7 +71,8 @@ class NTFT:
 		ret = self.Read(f.read(), size)
 		f.close()
 		return ret
-	def Read(self, data, (w, h)):
+	def Read(self, data):
+		w, h = data
 		#the actual stored data is a image with the sizes padded to the nearest power of 2. The image is then clipped out from it.
 		psize = []
 		for i in (w, h):
@@ -82,15 +83,15 @@ class NTFT:
 		pw, ph = psize
 		
 		#check if it fits the file:
-		if pw*ph*2 <> len(data):
-			print "Invalid sizes"
+		if pw*ph*2 != len(data):
+			print ("Invalid sizes")
 			return False
 		
 		#JUST DO IT!
 		#self.Image = [[None for _ in xrange(h)] for _ in xrange(w)]
 		self.Image = np.zeros((w, h), dtype=">u4")
-		for y in xrange(h):
-			for x in xrange(w):
+		for y in range(h):
+			for x in range(w):
 				pos = (x + y*pw)*2
 				byte = AscDec(data[pos:pos+2], True)
 				
@@ -130,8 +131,8 @@ class NTFT:
 			psize.append(1<<p)
 		
 		out = []
-		for y in xrange(psize[1]):
-			for x in xrange(psize[0]):
+		for y in range(psize[1]):
+			for x in range(psize[0]):
 				#read
 				#c = self.Image[clamp(x, 0, w-1)][clamp(y, 0, h-1)]
 				c = self.Image[clamp(x, 0, w-1), clamp(y, 0, h-1)]
@@ -163,7 +164,7 @@ class NTFT:
 #	This function requires the PIl imaging module
 def WriteImage(image, outputPath):
 	if not hasPIL:
-		print "Error: PIL not found!"
+		print("Error: PIL not found!")
 		return False
 	#if not image: return False
 	
@@ -195,17 +196,18 @@ def ReadImage(path):#TODO: make it support numpy
 	w, h = image.size
 	
 	if len(pixeldata[0]) < 4:
-		def Combine((r, g, b)):
+		def Combine(r, g, b):
+			
 			return (r << 24) | (g << 16) | (b << 8) | 0xFF
 	else:
-		def Combine((r, g, b, a)):
+		def Combine(r, g, b, a):
 			return (r << 24) | (g << 16) | (b << 8) | a
 	
 	#ret = []
 	ret = np.zeros((w, h), dtype=">u4")
-	for x in xrange(w):
+	for x in range(w):
 		#line = []
-		for y in xrange(h):
+		for y in range(h):
 			ret[x, y] = Combine(pixeldata[y*w + x])#maybe make a more numpy efficient way?
 			#line.append(Combine(pixeldata[y*w + x]))
 		#ret.append(line)
@@ -230,35 +232,35 @@ def ReadImage(path):#TODO: make it support numpy
 #i.WriteFile("NTFTtests/geh.ntft")
 
 if __name__ == "__main__":
-	print "              ==      NTFT.py     =="
-	print "             ==      by pbsds      =="
-	print "              ==       v0.95      =="
+	print("              ==      NTFT.py     ==")
+	print("             ==      by pbsds      ==")
+	print("              ==       v0.95      ==")
 	print
 	
 	if not hasPIL:
-		print "PIL not found! Exiting..."
+		print ("PIL not found! Exiting...")
 		sys.exit()
 	
 	if len(sys.argv) < 2:
-		print "Usage:"
-		print "      NTFT.py <input> [<output> [<width> <height>]]"
-		print ""
-		print "Can convert a NTFT to PNG or the other way around."
-		print "if <output> isn't specified it will be set to <input> with an another extension"
-		print ""
-		print "The NTFT file contain only the colordata, so it's up to the user to find or"
-		print "store the resolution of the image. <width> and <height> is required"
-		print "to convert a NTFT file to a image."
-		print "32x32 is the normal resolution for button icons in UGO files."
+		print ("Usage:")
+		print ("      NTFT.py <input> [<output> [<width> <height>]]")
+		print("")
+		print ("Can convert a NTFT to PNG or the other way around.")
+		print ("if <output> isn't specified it will be set to <input> with an another extension")
+		print ("")
+		print ("The NTFT file contain only the colordata, so it's up to the user to find or")
+		print ("store the resolution of the image. <width> and <height> is required")
+		print ("to convert a NTFT file to a image.")
+		print ("32x32 is the normal resolution for button icons in UGO files.")
 		sys.exit()
 	
 	input = sys.argv[1]
 	
 	if input[-4:].lower() == "ntft" or len(sys.argv) >= 5:
-		print "Mode: NTFT -> image"
+		print("Mode: NTFT -> image")
 		Encode = False
 	else:
-		print "Mode: image -> NTFT"
+		print("Mode: image -> NTFT")
 		Encode = True#if false it'll decode
 	
 	if len(sys.argv) >= 3:
@@ -267,24 +269,24 @@ if __name__ == "__main__":
 		width, height = None, None
 		if len(sys.argv) >= 5:
 			if (not sys.argv[3].isdigit()) or (not sys.argv[4].isdigit()):
-				print "Invalid size input!"
+				print("Invalid size input!")
 				sys.exit()
 			width = int(sys.argv[3])
 			height = int(sys.argv[4])
 		
 		if not (width and height) and not Encode:
-			print "Image size not provided!"
+			print("Image size not provided!")
 			sys.exit()
 		
 	else:
 		output = ".".join(input.split(".")[:-1]) + (".ntft" if Encode else ".png")
 	
-	print "Converting..."
+	print("Converting...")
 	if Encode:
 		try:
 			image = ReadImage(input)
 		except IOError as err:
-			print err
+			print(err)
 			sys.exit()
 		
 		i = NTFT()
@@ -295,11 +297,11 @@ if __name__ == "__main__":
 		try:
 			ntft = NTFT().ReadFile(input, (width, height))
 		except IOError as err:
-			print err
+			print(err)
 			sys.exit()
 		
 		if not ntft:#eeror message already printed
 			sys.exit()
 		
 		WriteImage(ntft.Image, output)
-	print "Done!"
+	print("Done!")

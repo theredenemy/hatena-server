@@ -132,10 +132,10 @@ class CreatorIDFileResource(resource.Resource):
 		
 		#Is it a spinoff?
 		Spinnoff = ""
-		if tmb.OriginalAuthorID <> tmb.EditorAuthorID or tmb.OriginalFilename <> tmb.CurrentFilename:
+		if tmb.OriginalAuthorID != tmb.EditorAuthorID or tmb.OriginalFilename != tmb.CurrentFilename:
 			if Database.FlipnoteExists(tmb.OriginalAuthorID, tmb.OriginalFilename[:-4]):
 				Spinnoff = SpinoffTemplate1.replace("%%CreatorID%%", tmb.OriginalAuthorID).replace("%%Filename%%", tmb.OriginalFilename[:-4])
-			elif tmb.OriginalAuthorID <> tmb.EditorAuthorID:
+			elif tmb.OriginalAuthorID != tmb.EditorAuthorID:
 				Spinnoff = SpinoffTemplate2
 		
 		#make each entry:

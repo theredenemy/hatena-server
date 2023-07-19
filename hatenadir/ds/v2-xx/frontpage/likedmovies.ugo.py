@@ -31,13 +31,14 @@ class PyResource(resource.Resource):
 	def Update(self):#called every 15 minutes
 		reactor.callLater(60*10, self.Update)
 		
-		if self.newestflip <> Database.Newest[0] or self.neweststar <> Database.Stars:
+		if self.newestflip != Database.Newest[0] or self.neweststar != Database.Stars:
 			self.newestflip = Database.Newest[0]
 			self.neweststar = Database.Stars
 			reactor.callInThread(self.UpdateThreaded, Database.Newest)
 	def UpdateThreaded(self, flipnotes):#run in an another thread
 		#sort the flipnotes by viewcount, affected by amount of stars
-		def sort((i, (ID, flip))):
+		def sort(i):
+			ID, flip = i
 			views, stars = Database.GetFlipnote(ID, flip)[1:3]
 			return int(stars)*110 + int(views)/10 - i
 		flipnotes = map(lambda x: x[1], sorted(enumerate(flipnotes), key=sort)[::-1])[:500]
@@ -48,11 +49,11 @@ class PyResource(resource.Resource):
 		if pagecount > 10: pagecount = 10#temp?
 		flipcount = len(flipnotes) if len(flipnotes) < 500 else 500
 		
-		for i in xrange(pagecount):
+		for i in range(pagecount):
 			pages.append(self.MakePage(flipnotes[i*50:i*50+50], i+1, i<pagecount-1, flipcount))
 		
 		if self.pages:#not on startup
-			print time.strftime("[%H:%M:%S] Updated likedmovies.ugo")
+			print(time.strftime("[%H:%M:%S] Updated likedmovies.ugo"))
 		self.pages = pages
 	def MakePage(self, flipnotes, page, next, count):
 		ugo = UGO()

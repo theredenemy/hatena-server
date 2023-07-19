@@ -1,4 +1,4 @@
-from Hatenatools.PPM import AscDec, DecAsc, ThumbPalette
+from PPM import AscDec, DecAsc, ThumbPalette
 
 
 import numpy as np

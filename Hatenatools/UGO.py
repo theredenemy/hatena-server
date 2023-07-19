@@ -18,7 +18,7 @@ from base64 import b64encode, b64decode
 import xml.etree.ElementTree as ET
 
 try:
-	import Hatenatools.TMB
+	import TMB
 	HasPPM = True
 except ImportError:
 	HasPPM = False

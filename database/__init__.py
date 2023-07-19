@@ -69,7 +69,7 @@ class Database:
 			
 			#update to newer format:
 			#current format = [filename, views, stars, green stars, red stars, blue stars, purple stars, Channel, Downloads]
-			for i in xrange(len(ret)):
+			for i in range(len(ret)):
 				if len(ret[i]) < 9:
 					filename = ret[i][0]#take this as a give for now
 					for n, default in enumerate((filename, 0, 0, 0, 0, 0, 0, "", 0)):

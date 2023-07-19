@@ -32,7 +32,7 @@ class PyResource(resource.Resource):
 	def Update(self):#called every minute
 		reactor.callLater(60, self.Update)
 		
-		if self.newestflip <> Database.Newest[0]:
+		if self.newestflip != Database.Newest[0]:
 			self.newestflip = Database.Newest[0]
 			reactor.callInThread(self.UpdateThreaded, Database.Newest)
 	def UpdateThreaded(self, flipnotes):#run in an another thread
@@ -42,11 +42,11 @@ class PyResource(resource.Resource):
 		if pagecount > 10: pagecount = 10#temp?
 		flipcount = len(flipnotes)
 		
-		for i in xrange(min((pagecount, 10))):
+		for i in range(min((pagecount, 10))):
 			pages.append(self.MakePage(flipnotes[i*50:i*50+50], i+1, i<pagecount-1, flipcount))
 		
 		if self.pages:#not on startup
-			print time.strftime("[%H:%M:%S] Updated newmovies.ugo")
+			print(time.strftime("[%H:%M:%S] Updated newmovies.ugo"))
 		self.pages = pages
 	def MakePage(self, flipnotes, page, next, count):
 		ugo = UGO()

@@ -61,7 +61,7 @@ class Log:
 	def HandleUpdate(self):#Automatically updates the handles for new filenames every hour
 		reactor.callLater(60*60, self.HandleUpdate)
 		
-		print time.strftime("[%H:%M:%S] Handle update")
+		print(time.strftime("[%H:%M:%S] Handle update"))
 		
 		#make year folder
 		if not os.path.exists("logs/"+time.strftime("%Y")):
@@ -100,10 +100,13 @@ Log = Log()
 #init database:
 print("Initializing flipnote database...",)
 import DB
-print "Done!"
+print ("Done!")
 
 #Setup hatena server:
-print "Setting up hatena site...",
+
+# How did you forget ()
+
+print("Setting up hatena site...")
 import hatena
 hatena.ServerLog = Log
 site = server.Site(hatena.Setup())

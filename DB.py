@@ -7,5 +7,5 @@ elif DB_type == "mondoDB":#not yet implemented
 	from database import Database#hue
 else:
 	import sys
-	print "Unsupported database type \"%s\"" % DB_type
+	print("Unsupported database type \"%s\"" % DB_type)
 	sys.exit()

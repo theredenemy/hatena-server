@@ -33,7 +33,7 @@ def AscDec(ascii, LittleEndian=False):#Converts a ascii string into a decimal
 	return ret
 def DecAsc(dec, length=None, LittleEndian=False):#Converts a decimal into an ascii string of chosen length
 	out = []
-	while dec <> 0:
+	while dec != 0:
 		out.insert(0, dec&0xFF)
 		dec >>= 8
 	#"".join(map(chr, out))
@@ -85,16 +85,16 @@ class UGO:
 		global HasPPM
 		
 		#Header:
-		if data[:4] <> "UGAR": return False#The file isn't a UGO file
+		if data[:4] != "UGAR": return False#The file isn't a UGO file
 		Sections    = AscDec(data[ 4: 8], True)#could also be version
 		if Sections >= 1:
 			self.TableLength = AscDec(data[ 8:12], True)
 		if Sections >= 2:
 			self.ExtraLength = AscDec(data[12:16], True)
 		if Sections > 2:
-			print "Warning: This UGO file has more than the 2 known sections:",Sections
-			print "Please send this UGO file to pbsds over at pbsds.net"
-			print "This file could possibly be read incorrectly..."
+			print ("Warning: This UGO file has more than the 2 known sections:",Sections)
+			print ("Please send this UGO file to pbsds over at pbsds.net")
+			print ("This file could possibly be read incorrectly...")
 		headerlength = 8 + Sections*4
 		
 		#Read table of contents:
@@ -140,7 +140,7 @@ class UGO:
 				
 				link = i[1]
 				label = b64decode(i[2]).decode("UTF-16LE")
-				selected = int(i[3]) <> 0#bool
+				selected = int(i[3]) != 0#bool
 				
 				self.Items.append(("category", link, label, selected))
 				continue
@@ -229,7 +229,7 @@ class UGO:
 			
 			#if not recognized:
 			self.Items.append(("unknown", i))
-			print "Unknown UGO item discovered:", i
+			print ("Unknown UGO item discovered:", i)
 		self.Loaded = True
 		return self
 	def WriteFile(self, path):

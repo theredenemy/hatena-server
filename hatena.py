@@ -17,7 +17,7 @@ class AccessDenied(resource.Resource):
 	isLeaf = True
 	def render(self, request):
 		ServerLog.write("%s got 403 when requesting \"%s\"" % (request.getClientIP(), request.path), Silent)
-		print "debug:",request.getAllHeaders()
+		print ("debug:",request.getAllHeaders())
 		
 		request.setResponseCode(403)
 		return "403 - Access denied\nThis proxy is only allowed to use for Flipnote Hatena for the DSi."
@@ -165,7 +165,7 @@ class FolderResource(resource.Resource):
 		return "I am a folder, but I'm to lazy to list my contents..."
 def LoadHatenadirStructure(Resource, path=os.path.join("hatenadir", "ds", "v2-xx")):
 	for root, dirs, files in os.walk(path):
-		if root <> path: continue#use recursion instead
+		if root != path: continue#use recursion instead
 		for filename in files:
 			filetype = filename.split(".")[-1].lower()
 			os.path.join(path, filename)
@@ -177,9 +177,9 @@ def LoadHatenadirStructure(Resource, path=os.path.join("hatenadir", "ds", "v2-xx
 					pyfile = imp.load_source("pyfile", os.path.abspath(os.path.join(path, filename)))
 				except ImportError as err:
 					pyfile = None
-					print "Error!"
-					print "Failed to import the python file \"%s\"" % os.path.join(path, filename)
-					print err
+					print("Error!")
+					print("Failed to import the python file \"%s\"" % os.path.join(path, filename))
+					print(err)
 				
 				if pyfile:
 					Resource.putChild(filename[:-3], pyfile.PyResource())
@@ -188,7 +188,7 @@ def LoadHatenadirStructure(Resource, path=os.path.join("hatenadir", "ds", "v2-xx
 			else:
 				Resource.putChild(filename, FileResource(os.path.join(path, filename)))
 		for foldername in dirs:# os.path.isdir(i):
-			if foldername[:2] <> "__":
+			if foldername[:2] != "__":
 				folder = FolderResource()
 				LoadHatenadirStructure(folder, os.path.join(path, foldername))
 				Resource.putChild(foldername, folder)

@@ -3,7 +3,7 @@ Hatena server - by pbsds
 Fork By theredenemy
 ======
 
-Trying to port it Python 3
+Trying to port it to Python 3
 
 This is a replacement for the Flipnote Hatena service for the DSi which has ended.
 It's written in Python 2.7 and requires Twisted.

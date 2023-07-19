@@ -92,7 +92,7 @@ class Log:
 	#=====
 	def write(self, String, Silent=False):
 		if not Silent:
-			print time.strftime("[%H:%M:%S]"), String
+			print(time.strftime("[%H:%M:%S]"), String)
 		self.Activityhandle.write(time.strftime("[%H:%M:%S] ") + String + "\n")
 	Print = write
 Log = Log()
@@ -110,11 +110,11 @@ print("Setting up hatena site...")
 import hatena
 hatena.ServerLog = Log
 site = server.Site(hatena.Setup())
-print "Done!"
+print("Done!")
 
 
 #make the hatena server accept proxy connections:
-print "Setting up proxy hack...",
+print("Setting up proxy hack...",)
 silent = True
 old_buildProtocol = site.buildProtocol
 def buildProtocol(self, addr):
@@ -134,10 +134,10 @@ def buildProtocol(self, addr):
 	return protocol
 funcType = type(site.buildProtocol)
 site.buildProtocol = funcType(buildProtocol, site, server.Site)
-print "Done!"
+print("Done!")
 
 #run!
-print "Server start!\n"
+print("Server start!\n")
 if useWSGI:
 	#probably doesn't work
 	application = service.Application('web')

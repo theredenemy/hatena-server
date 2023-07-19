@@ -15,14 +15,14 @@ class Database:
 			file = ""
 		
 		if file:
-			self.Newest = [tuple(i.split("\t")) for i in file.split("\n")]#[i] = [creatorID, filename]
+			self.Newest = [tuple(i.split(b"\t")) for i in file.split(b"\n")] #[i] = [creatorID, filename]
 		else:
 			self.Newest = []
 		
-		self.Creator = {}#to store creator info updates before writing to disk. Creator[id][n] = [filename, views, stars, green stars, red stars, blue stars, purple stars, Channel, Downloads]
+		self.Creator = {} #to store creator info updates before writing to disk. Creator[id][n] = [filename, views, stars, green stars, red stars, blue stars, purple stars, Channel, Downloads]
 		
 		#to check if an update is neccesary(caching):
-		self.new = False#True when new flipnotes has been uploaded
+		self.new = False #True when new flipnotes has been uploaded
 		self.Views = 0
 		self.Stars = 0
 		self.Downloads = 0
@@ -30,7 +30,7 @@ class Database:
 		#schtuff
 		reactor.callLater(60*3, self.flusher)
 		atexit.register(self.write)
-	def flusher(self):#Automatically flushes the files every 3 minutes and trims down memory usage
+	def flusher(self): #Automatically flushes the files every 3 minutes and trims down memory usage
 		reactor.callLater(60*3, self.flusher)
 		self.write()
 	def write(self):
@@ -156,4 +156,4 @@ class Database:
 	#internal helpers:
 	def FlipnotePath(self, CreatorID, filename):#use self.GetFlipnotePPM() instead
 		return "database/Creators/%s/%s.ppm" % (CreatorID, filename)
-Database = Database()#is loaded, yesth!
+Database = Database() #is loaded, yesth!

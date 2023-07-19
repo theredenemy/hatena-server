@@ -104,7 +104,6 @@ print ("Done!")
 
 #Setup hatena server:
 
-# How did you forget ()
 
 print("Setting up hatena site...")
 import hatena

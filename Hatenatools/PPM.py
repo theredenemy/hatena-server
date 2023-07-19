@@ -21,7 +21,7 @@ try:
 	from PIL import Image
 	hasPIL = True
 except ImportError:
-	print "Warning: PIL not found, image extraction won't work!"
+	print("Warning: PIL not found, image extraction won't work!")
 	hasPIL = False
 # Test for ffmpeg by executing ffmpeg -h; an OSError indicates ffmpeg is not installed
 
@@ -32,7 +32,7 @@ try:
 						stderr=null)
 	hasffmpeg = True
 except OSError:
-	print "Warning: ffmpeg not found, video export unavailable. Please make sure ffmepg is installed and can be accessed on your path."
+	print("Warning: ffmpeg not found, video export unavailable. Please make sure ffmepg is installed and can be accessed on your path.")
 	hasffmpeg = False
 
 #helpers:
@@ -45,7 +45,7 @@ def AscDec(ascii, LittleEndian=False):#Converts a ascii string into a decimal
 	return ret
 def DecAsc(dec, length=None, LittleEndian=False):#Converts a decimal into an ascii string of chosen length
 	out = []
-	while dec <> 0:
+	while dec != 0:
 		out.insert(0, dec&0xFF)
 		dec >>= 8
 	#"".join(map(chr, out))
@@ -61,7 +61,7 @@ def DecAsc(dec, length=None, LittleEndian=False):#Converts a decimal into an asc
 	if LittleEndian: out.reverse()
 	return "".join(map(chr, out))
 def AddPadding(i,pad = 0x10):#used mainly for zipaligning offsets
-	if i % pad <> 0:
+	if i % pad != 0:
 		return i + pad - (i % pad)
 	return i
 
@@ -135,7 +135,7 @@ class PPM:
 		f.close()
 		return ret
 	def Read(self, data, DecodeThumbnail=False, ReadFrames=True, ReadSound=False):#Load: (thumbnail, frames, sound)
-		if data[:4] <> "PARA" or len(data) <= 0x6a0:
+		if data[:4] != "PARA" or len(data) <= 0x6a0:
 			return False
 		
 		
@@ -177,7 +177,7 @@ class PPM:
 		FrameOffsets = [AnimationOffset + AscDec(data[0x06a8+i*4:0x06a8+i*4+4], True) for i in xrange(self.FrameCount)]
 		
 		#Read the audio header:
-		self.SFXUsage = [(i&0x1<>0, i&0x2<>0, i&0x4<>0) for i in map(ord, data[AudioOffset:AudioOffset+self.FrameCount])]#SFXUsage[frame] = (sfx1, sfx2, sfx2) shere sfxX is either 0 or 1
+		self.SFXUsage = [(i&0x1!=0, i&0x2!=0, i&0x4!=0) for i in map(ord, data[AudioOffset:AudioOffset+self.FrameCount])]#SFXUsage[frame] = (sfx1, sfx2, sfx2) shere sfxX is either 0 or 1
 		SoundSize =(AscDec(data[AddPadding(AudioOffset+self.FrameCount, 4)   :AddPadding(AudioOffset+self.FrameCount, 4)+ 4], True),#BG music
 					AscDec(data[AddPadding(AudioOffset+self.FrameCount, 4)+ 4:AddPadding(AudioOffset+self.FrameCount, 4)+ 8], True),#SFX1
 					AscDec(data[AddPadding(AudioOffset+self.FrameCount, 4)+ 8:AddPadding(AudioOffset+self.FrameCount, 4)+12], True),#SFX2
@@ -311,7 +311,7 @@ class PPM:
 		Frame = np.zeros((2, 256, 192), dtype=np.bool_)
 		
 		#Read tags:
-		NewFrame = ord(data[offset]) & 0x80 <> 0
+		NewFrame = ord(data[offset]) & 0x80 != 0
 		Unknown = ord(data[offset]) >> 5 & 0x03
 		
 		offset += 1
@@ -319,7 +319,7 @@ class PPM:
 		#WIP - framemove:
 		FrameMove = [0,0]
 		if Unknown & 0x2:#doesn't work 100%...
-			print "FrameMove at offset ",offset-1
+			print ("FrameMove at offset ",offset-1)
 			
 			move_x = AscDec(data[offset+0:offset+1], True)
 			move_y = AscDec(data[offset+1:offset+2], True)
@@ -327,7 +327,7 @@ class PPM:
 			FrameMove[1] = move_y if move_y <= 127 else move_y-256
 			offset += 2
 		elif Unknown:
-			print "Unknown tags:",Unknown,"at offset ",offset-1
+			print ("Unknown tags:",Unknown,"at offset ",offset-1)
 		
 		
 		#read the line encoding of the layers:
@@ -391,7 +391,7 @@ class PPM:
 							byte >>= 1
 		
 		#Merges this frame with the previous frame if NewFrame isn't true:
-		if not NewFrame and PrevFrame.all() <> None:#maybe optimize this better for numpy...
+		if not NewFrame and PrevFrame.all() != None:#maybe optimize this better for numpy...
 			if FrameMove[0] or FrameMove[1]:#Moves the previous frame if specified:
 				NewPrevFrame = np.zeros((2, 256, 192), dtype=np.bool_)
 				
@@ -406,7 +406,7 @@ class PPM:
 				PrevFrame = NewPrevFrame
 			
 			#merge the frames:
-			Frame = Frame <> PrevFrame
+			Frame = Frame != PrevFrame
 		
 		return Frame
 
@@ -443,7 +443,7 @@ class TMB:
 		f.close()
 		return ret
 	def Read(self, data, DecodeThumbnail=False):
-		if data[:4] <> "PARA" or len(data) < 0x6a0:
+		if data[:4] != "PARA" or len(data) < 0x6a0:
 			return False
 		
 		#Read the header:

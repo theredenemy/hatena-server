@@ -174,7 +174,7 @@ class PPM:
 		#read the animation sequence header:
 		self.Looped = ord(data[0x06A6]) >> 1 & 0x01 == 1#Unverified?
 		AnimationOffset = 0x6a8 + AscDec(data[0x6a0:0x6a4], True)
-		FrameOffsets = [AnimationOffset + AscDec(data[0x06a8+i*4:0x06a8+i*4+4], True) for i in xrange(self.FrameCount)]
+		FrameOffsets = [AnimationOffset + AscDec(data[0x06a8+i*4:0x06a8+i*4+4], True) for i in range(self.FrameCount)]
 		
 		#Read the audio header:
 		self.SFXUsage = [(i&0x1!=0, i&0x2!=0, i&0x4!=0) for i in map(ord, data[AudioOffset:AudioOffset+self.FrameCount])]#SFXUsage[frame] = (sfx1, sfx2, sfx2) shere sfxX is either 0 or 1
@@ -214,7 +214,7 @@ class PPM:
 		if ReadSound:
 			self.SoundData = []
 			pos = AddPadding(AudioOffset+self.FrameCount+32, 4)
-			for i in xrange(4):
+			for i in range(4):
 				self.SoundData.append(data[pos:pos+SoundSize[i]])
 				pos += SoundSize[i]
 			
@@ -331,7 +331,7 @@ class PPM:
 		
 		
 		#read the line encoding of the layers:
-		for layer in xrange(2):
+		for layer in range(2):
 			for byte in map(ord, data[offset:offset+48]):
 				Encoding[layer].append(byte      & 0x03)
 				Encoding[layer].append(byte >> 2 & 0x03)
@@ -340,8 +340,8 @@ class PPM:
 			offset += 48
 		
 		#read layers:
-		for layer in xrange(2):
-			for y in xrange(192):
+		for layer in range(2):
+			for y in range(192):
 				if   Encoding[layer][y] == 0:#Nothing
 					pass
 				elif Encoding[layer][y] == 1:#Normal
@@ -352,7 +352,7 @@ class PPM:
 						if UseByte & 0x80000000:
 							byte = ord(data[offset])
 							offset += 1
-							for _ in xrange(8):
+							for _ in range(8):
 								if byte & 0x01:
 									Frame[layer][x][y] = True
 								x += 1
@@ -591,7 +591,7 @@ class TMB:
 #	This function requires the PIl imaging module
 def WriteImage(image, outputPath, scale=1):
 	if not hasPIL:
-		print "Error: PIL not found!"
+		print("Error: PIL not found!")
 		return False
 	#if not image: return False
 
@@ -636,8 +636,8 @@ def get_metadata(flipnote):
 	return meta
 
 def DumpFrames(flipnote,directory,scale=1):
-	for i in xrange(flipnote.FrameCount):
-		print "Dumping frame #%i of %i..." % (i+1, flipnote.FrameCount)
+	for i in range(flipnote.FrameCount):
+		print("Dumping frame #%i of %i..." % (i+1, flipnote.FrameCount))
 		WriteImage(flipnote.GetFrame(i), os.path.join(directory, "frame %s.png" % str(i+1).zfill(3)), scale)
 			
 def DumpSoundFiles(flipnote,directory,raw=False):
@@ -657,136 +657,136 @@ def DumpSFXUsage(flipnote,directory):
 			f.write("Frame %i:%s%s%s\n" % (i, " SFX1"*s1, " SFX2"*s2, " SFX3"*s3))
 
 if __name__ == '__main__':
-	print "              ==      PPM.py      =="
-	print "             ==      by pbsds      =="
-	print "              ==       v1.3      =="
+	print("              ==      PPM.py      ==")
+	print("             ==      by pbsds      ==")
+	print("              ==       v1.3      ==")
 	print
 	
 	if len(sys.argv) < 3:
-		print "Usage:"
-		print "      PPM.py <Mode> <Input> [<Output>] [<Frame>] [<Option>]"
-		print ""
-		print "      <Mode>:"
-		print "          -t: Extracts the thumbnail to the file <Output>"
-		print "          -f: Extracts the frame(s) to <Output>"
-		print "          -s: Dumps the sound files to the folder <Output>"
-		print "          -S: Same as mode -s, but will also dump the raw sound data files"
-		print "          -e: Exports the flipnote to an MKV"
-		print "          -m: Prints out the metadata. Can also write it to <output> which also"
-		print "              supports unicode charactes."
-		print "          -oa: Seach a directory for an original author that matches the RegEx"
-		print "          Mode -t and -m supports TMB files aswell"
-		print "      <Frame>"
-		print "          Only used in mode -f"
-		print "          Set this to the exact frame you want to extract(starting at 1) and it"
-		print "          will be saved as a file to <Output>."
-		print "          If not specified, it will extract all frames to the folder <Output>"
-		print "      <Option>"
-		print "          --speed N: Only used in mode -e. Set this to force a specific"
-		print "                     flipnote speed (1 to 8)."
-		print "          --scale N: Only used in modes -e and -f. Set this to upscale the"
-		print "                     frames N times."
+		print("Usage:")
+		print("      PPM.py <Mode> <Input> [<Output>] [<Frame>] [<Option>]")
+		print("")
+		print("      <Mode>:")
+		print("          -t: Extracts the thumbnail to the file <Output>")
+		print("          -f: Extracts the frame(s) to <Output>")
+		print("          -s: Dumps the sound files to the folder <Output>")
+		print("          -S: Same as mode -s, but will also dump the raw sound data files")
+		print("          -e: Exports the flipnote to an MKV")
+		print("          -m: Prints out the metadata. Can also write it to <output> which also")
+		print("              supports unicode charactes.")
+		print("          -oa: Seach a directory for an original author that matches the RegEx")
+		print("          Mode -t and -m supports TMB files aswell")
+		print("      <Frame>")
+		print("          Only used in mode -f")
+		print("          Set this to the exact frame you want to extract(starting at 1) and it")
+		print("          will be saved as a file to <Output>.")
+		print("          If not specified, it will extract all frames to the folder <Output>")
+		print("      <Option>")
+		print("          --speed N: Only used in mode -e. Set this to force a specific")
+		print("                     flipnote speed (1 to 8).")
+		print("          --scale N: Only used in modes -e and -f. Set this to upscale the")
+		print("                     frames N times.")
 		
 		sys.exit()
 	
 	import os, time
 	
 	if sys.argv[1] == "-t":
-		print "Reading the flipnote file...",
+		print ("Reading the flipnote file...",)
 		if not os.path.isfile(sys.argv[2]):
-			print "Error!\nSpecified file doesn't exist!"
+			print ("Error!\nSpecified file doesn't exist!")
 			sys.exit()
 		flipnote = TMB().ReadFile(sys.argv[2], True)
 		if not flipnote:
-			print "Error!"
-			print "The given file is not a Flipnote PPM file or TMB file!"
+			print ("Error!")
+			print("The given file is not a Flipnote PPM file or TMB file!")
 			sys.exit()
-		print "Done!"
+		print("Done!")
 		
-		print "Dumping the thumbnail...",
+		print("Dumping the thumbnail...",)
 		WriteImage(flipnote.GetThumbnail(), sys.argv[3])
-		print "Done!"
+		print("Done!")
 	elif sys.argv[1] == "-f":
 		if len(sys.argv) < 4:
-			print "Error!"
-			print "<Output> not specified!"
+			print("Error!")
+			print("<Output> not specified!")
 			sys.exit()
 
 		try:
 			scale = int(sys.argv[sys.argv.index("--scale")+1])
-			print "Using frame scaling "+str(scale)
+			print("Using frame scaling "+str(scale))
 		except (IndexError,ValueError):
 			scale = 1
 		
-		print "Reading the flipnote file...",
+		print("Reading the flipnote file...",)
 		if not os.path.isfile(sys.argv[2]):
-			print "Error!\nSpecified file doesn't exist!"
+			print("Error!\nSpecified file doesn't exist!")
 			sys.exit()
 		flipnote = PPM().ReadFile(sys.argv[2])
 		if not flipnote:
-			print "Error!\nThe given file is not a Flipnote PPM file."
+			print("Error!\nThe given file is not a Flipnote PPM file.")
 			sys.exit()
-		print "Done!"
+		print("Done!")
 		
 		
 		if len(sys.argv) < 5:
 			if not os.path.isdir(sys.argv[3]):
-				print "Error!\nThe specified directory doesn't exist!"
+				print("Error!\nThe specified directory doesn't exist!")
 				sys.exit()
 
 			DumpFrames(flipnote,sys.argv[3], scale)
 			
-			print "Done!"
+			print("Done!")
 		else:
 			try:
 				int(sys.argv[4])
 			except:
-				print "Error!\nInvalid <Frame>!"
+				print("Error!\nInvalid <Frame>!")
 				sys.exit()
 			
 			if not (0 <= int(sys.argv[4])-1 < flipnote.FrameCount):
-				print "Error!\n<Frame> is out of bounds!"
+				print("Error!\n<Frame> is out of bounds!")
 				sys.exit()
 			
-			print "Dumping frame #%i..." % int(sys.argv[4]),
+			print("Dumping frame #%i..." % int(sys.argv[4]),)
 			WriteImage(flipnote.GetFrame(int(sys.argv[4])-1), sys.argv[3], scale)
-			print "Done!"
+			print("Done!")
 	elif sys.argv[1] in ("-s", "-S"):
 		if len(sys.argv) < 4:
-			print "Error!"
-			print "<Output> not specified!"
+			print("Error!")
+			print("<Output> not specified!")
 			sys.exit()
 		
-		print "Reading the flipnote file...",
+		print("Reading the flipnote file...",)
 		if not os.path.isfile(sys.argv[2]):
-			print "Error!\nSpecified file doesn't exist!"
+			print("Error!\nSpecified file doesn't exist!")
 			sys.exit()
 		flipnote = PPM().ReadFile(sys.argv[2], ReadFrames=False, ReadSound=True)
 		if not flipnote:
-			print "Error!\nThe given file is not a Flipnote PPM file."
+			print("Error!\nThe given file is not a Flipnote PPM file.")
 			sys.exit()
-		print "Done!"
+		print("Done!")
 		
 		if not os.path.isdir(sys.argv[3]):
-			print "Error!\nThe specified output directory doesn't exist!"
+			print("Error!\nThe specified output directory doesn't exist!")
 			sys.exit()
 		
-		print "Converting the sound files...",
+		print("Converting the sound files...",)
 		DumpSoundFiles(flipnote,sys.argv[3],raw=(sys.argv[1]=="-S"))
-		print "Done!"
+		print("Done!")
 		
-		print "Dumping the sound effect usage...",
+		print("Dumping the sound effect usage...",)
 		DumpSFXUsage(flipnote,sys.argv[3])
-		print "Done!"
+		print("Done!")
 	elif sys.argv[1] == "-m":
 		if not os.path.isfile(sys.argv[2]):
-			print "Error!\nSpecified file doesn't exist!"
+			print("Error!\nSpecified file doesn't exist!")
 			sys.exit()
 		
 		filetype = "ppm" if sys.argv[2][-3:] == "ppm" else "tmb"
 		flipnote = TMB().ReadFile(sys.argv[2]) if filetype == "tmb" else PPM().ReadFile(sys.argv[2], ReadFrames=False)
 		if not flipnote:
-			print "Error!\nThe given file is not a Flipnote PPM file or TMB file."
+			print("Error!\nThe given file is not a Flipnote PPM file or TMB file.")
 			if len(sys.argv) >= 4:
 				f = open(sys.argv, "wb")
 				f.write("Error!\nThe given file is not a Flipnote PPM file or TMB file.")
@@ -798,7 +798,7 @@ if __name__ == '__main__':
 		if sys.platform in ("win32", "cygwin"): newline = "\r\n"
 		elif sys.platform in ("darwin"): newline = "\r"
 
-		print newline.join(["\t".join([unicode(char) for char in line]) for line in meta.items()]).encode('ascii', 'ignore')
+		print(newline.join(["\t".join([str(char) for char in line]) for line in meta.items()]).encode('ascii', 'ignore'))
 		
 		if len(sys.argv) >= 4:
 			f = open(sys.argv[3], "wb")
@@ -810,7 +810,7 @@ if __name__ == '__main__':
 		for filename in os.listdir("."):
 			epoch = time.mktime(time.struct_time([2000, 1, 1, 0, 0, 0, 5, 1, -1]))
 			if not os.path.isfile(filename):
-				print "Error!\nSpecified file doesn't exist!"
+				print("Error!\nSpecified file doesn't exist!")
 				sys.exit()
 				
 			filetype = "ppm" if filename[-3:].lower() == "ppm" else "tmb"
@@ -820,11 +820,11 @@ if __name__ == '__main__':
 
 			meta = get_metadata(flipnote)
 			if regex.match(meta["Original author"]):
-				print filename
+				print(filename)
 
 	elif sys.argv[1] == "-e":
 		if not hasffmpeg:
-			print "Error!\nffmpeg is not installed."
+			print("Error!\nffmpeg is not installed.")
 			sys.exit()
 		in_file = sys.argv[2]
 		out_file = sys.argv[3]
@@ -832,30 +832,30 @@ if __name__ == '__main__':
 			sleep_time = int(sys.argv[sys.argv.index("--sleep")+1])
 		except (IndexError,ValueError):
 			sleep_time = 0
-			print "Not sleeping."
+			print("Not sleeping.")
 		try:
 			forced_speed = int(sys.argv[sys.argv.index("--speed")+1])
-			print "Using forced speed "+str(forced_speed)
+			print("Using forced speed "+str(forced_speed))
 		except (IndexError,ValueError):
 			forced_speed = None
 		try:
 			scale = int(sys.argv[sys.argv.index("--scale")+1])
-			print "Using frame scaling "+str(scale)
+			print("Using frame scaling "+str(scale))
 		except (IndexError,ValueError):
 			scale = 1
 			
 		if out_file.lower()[-4:] != ".mkv":
 			out_file += ".mkv"
 		if not os.path.isfile(in_file):
-			print "Error!\nSpecified file doesn't exist!"
+			print("Error!\nSpecified file doesn't exist!")
 			sys.exit()
 		if os.path.isfile(out_file):
-			print "Overwrite existing file?"
+			print("Overwrite existing file?")
 			overwrite = ""
 			while overwrite != "y" and overwrite != "n":
-				overwrite = raw_input("(Y/N) ").lower()
+				overwrite = input("(Y/N) ").lower()
 			if overwrite == "n":
-				print "Not overwriting; exiting."
+				print("Not overwriting; exiting.")
 				sys.exit()
 		filetype = "ppm" if in_file[-3:].lower() == "ppm" else "tmb"
 		flipnote = TMB().ReadFile(in_file) if filetype == "tmb" else PPM(forced_speed).ReadFile(in_file, ReadFrames=True, ReadSound=True)
@@ -863,31 +863,31 @@ if __name__ == '__main__':
 		# Make temp dir and dump the frames and sound here
 		tempdir = tempfile.mkdtemp()
 		os.mkdir(tempdir+"/sounds")
-		print "Dumping the frames..."
+		print("Dumping the frames...")
 		DumpFrames(flipnote,tempdir,scale)
-		print "Done!"
-		print "Dumping the sounds..."
+		print("Done!")
+		print("Dumping the sounds...")
 		DumpSoundFiles(flipnote,tempdir+"/sounds")
-		print "Done!"
-		print "Dumping SFX usage..."
+		print("Done!")
+		print("Dumping SFX usage...")
 		DumpSFXUsage(flipnote,tempdir+"/sounds")
-		print "Done!"
+		print("Done!")
 
 		# Now we need the metadata so we can look up the FPS
 		SPEEDS = [None,0.5,1,2,4,6,12,20,30]
-		print "Getting metadata..."
+		print("Getting metadata...")
 		metadata = get_metadata(flipnote)
-		print "Done!"
+		print("Done!")
 		speed = int(metadata["Frame speed"])
 		fps = SPEEDS[speed]
 		duration = float(metadata["Number of frames"])/float(fps)
-		print "Flipnote is speed {speed}, so {fps} FPS for {dur} seconds".format(speed=speed,fps=fps,dur=duration)
+		print("Flipnote is speed {speed}, so {fps} FPS for {dur} seconds".format(speed=speed,fps=fps,dur=duration))
 
 		# Now to make the video in ffmpeg
-		print "Exporting video with ffmpeg..."
+		print("Exporting video with ffmpeg...")
 		export_command = ["ffmpeg","-framerate",str(fps),"-start_number","1","-i","{path}/frame %03d.png".format(path=tempdir),"-i","{path}/sounds/BGM.wav".format(path=tempdir),"-c:v","libx264","-preset","veryslow","-c:a","pcm_s16le","-t","{dur}".format(dur=duration),"-y",out_file]
 		if not os.path.isfile(tempdir+"/sounds/BGM.wav"):
-			print "No background music. Adding silent track..."
+			print("No background music. Adding silent track...")
 			#has_bgm = False
 			export_command = ["ffmpeg","-framerate",str(fps),"-start_number","1","-i","{path}/frame %03d.png".format(path=tempdir),"-f","lavfi","-i","anullsrc=r=8192:cl=mono","-c:v","libx264","-preset","veryslow","-c:a","pcm_s16le","-shortest","-y",out_file]
 		else:
@@ -895,21 +895,21 @@ if __name__ == '__main__':
 			pass
 		with open(os.devnull) as null:
 			subprocess.call(export_command,stdout=null,stderr=null)
-		print "Done!"
+		print("Done!")
 
 		# If the audio has been sped up, we have to do it again manually
 		bgm_speed = int(metadata["BGM Frame speed"])
 		if bgm_speed != speed:
-			print "Background music speed must be modified!"
+			print("Background music speed must be modified!")
 			original_rate = 8192
 			newrate = 8192*(float(fps)/SPEEDS[bgm_speed])
-			print "Using new rate: "+str(newrate)
+			print("Using new rate: "+str(newrate))
 			speed_change_command = ["ffmpeg","-i","{path}/sounds/BGM.wav".format(path=tempdir),"-filter_complex","asetrate={rate}".format(rate=newrate),"-i",out_file,"-map","0:a","-map","1:v","-vcodec","copy","-acodec","pcm_s16le","{path}/temp_out.mkv".format(path=tempdir)]
 			with open(os.devnull,"w") as null:
 				subprocess.call(speed_change_command,stdout=null,stderr=null)
 			os.remove(out_file)
 			shutil.move("{path}/temp_out.mkv".format(path=tempdir),out_file)
-			print "Done!"
+			print("Done!")
 			
 		# These are the ffmpeg commands I need for each sound effect
 		# The first generates a silent track, with variable length. This gets concatenated to the front of the sound effect.
@@ -927,10 +927,10 @@ if __name__ == '__main__':
 ##            else:
 
 		# Read in the sound effect usage data
-		print "Reading sound effect usage..."
+		print("Reading sound effect usage...")
 		with open("{path}/sounds/SFX usage.txt".format(path=tempdir),"r") as sfx_usage_file:
 			sfx_usage = sfx_usage_file.read().split("\n")
-		print "Done!"
+		print("Done!")
 
 		# Iterate through the frames, checking if sound effects need to be added
 		for frame in range(len(sfx_usage)):
@@ -939,7 +939,7 @@ if __name__ == '__main__':
 			sfx = line.split(":")[1].strip() if line.strip() != "" else ""
 			if sfx != "": # If a sound effect must be played...
 				length = frame/float(fps)
-				print "Adding "+sfx+" at {length} seconds into the video.".format(length=length)
+				print("Adding "+sfx+" at {length} seconds into the video.".format(length=length))
 				# ...run each command in series with the correct arguments
 				with open(os.devnull,"w") as null:
 					subprocess.call([i.format(path=tempdir,sfx=sfx,length=length) for i in silence_command],stdout=null,stderr=null)
@@ -947,7 +947,7 @@ if __name__ == '__main__':
 					subprocess.call([i.format(path=tempdir,video_length=fps*len(sfx_usage)) for i in merge_command],stdout=null,stderr=null)
 					os.remove(out_file)
 					shutil.move("{path}/temp_out.mkv".format(path=tempdir),out_file)
-				print "Done!"
+				print("Done!")
 				time.sleep(sleep_time) # optional sleep -- in case you want to slow things down for HDD strain or reliability or something
 
 ##        subprocess.call(normalise_command)
@@ -956,9 +956,9 @@ if __name__ == '__main__':
 				
 
 		# Remove the temp dir and all files in it
-		print "Removing temporary directory..."
+		print("Removing temporary directory...")
 		shutil.rmtree(tempdir)
-		print "Done!"
+		print("Done!")
 			
 	else:
-		print "Error!\nThere's no such mode."
+		print("Error!\nThere's no such mode.")

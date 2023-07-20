@@ -5,6 +5,15 @@ Fork By theredenemy
 
 Trying to port it to Python 3
  NOT WORKING
+
+
+
+
+
+
+
+
+
 This is a replacement for the Flipnote Hatena service for the DSi which has ended.
 It's written in Python 2.7 and requires Twisted.
 Future versions could need PIL aswell.
